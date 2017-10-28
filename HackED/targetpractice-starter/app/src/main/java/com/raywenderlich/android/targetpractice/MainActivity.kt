@@ -176,9 +176,14 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     val popupWindow = PopupWindow(popupView, width, height, focusable)
 
       when (mode) {
-        Mode.MERCURY -> popupView.text1.text = "Mercury"
-        Mode.VENUS -> popupView.text1.text = "Venus"
-        Mode.EARTH -> popupView.text1.text = "Earth"
+        Mode.MERCURY -> {
+          popupView.text1.text = "Mercury-Mercury is the smallest and innermost planet in the Solar System. Its orbital period around the Sun of 88 days is the shortest of all the planets in the Solar System. It is named after the Roman deity Mercury, the messenger to the gods.\n"
+        }
+        Mode.VENUS -> popupView.text1.text = "Venus-Venus is the second planet from the Sun, orbiting it every 224.7 Earth days.[12] It has the longest rotation period (243 days) of any planet in the Solar System and rotates in the opposite direction to most other planets. It has no natural satellites. It is named after the Roman goddess of love and beauty. It is the second-brightest natural object in the night sky after the Moon, reaching an apparent magnitude of −4.6 – bright enough to cast shadows at night and, rarely, visible to the naked eye in broad daylight.\n"
+        Mode.EARTH -> popupView.text1.text = "Earth-Earth is the third planet from the Sun and the only object in the Universe known to harbor life. According to radiometric dating and other sources of evidence, Earth formed over 4 billion years ago. Earth's gravity interacts with other objects in space, especially the Sun and the Moon, Earth's only natural satellite. Earth revolves around the Sun in 365.26 days, a period known as an Earth year. During this time, Earth rotates about its axis about 366.26 times.\n"
+        Mode.MARS -> popupView.text1.text = "Mars-Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System after Mercury. In English, Mars carries a name of the Roman god of war, and is often referred to as the \"Red Planet\" because the reddish iron oxide prevalent on its surface gives it a reddish appearance that is distinctive among the astronomical bodies visible to the naked eye. Mars is a terrestrial planet with a thin atmosphere, having surface features reminiscent both of the impact craters of the Moon and the valleys, deserts, and polar ice caps of Earth.\n"
+        Mode.PLUTO -> popupView.text1.text = "Pluto-Pluto (minor-planet designation: 134340 Pluto) is a dwarf planet in the Kuiper belt, a ring of bodies beyond Neptune. It was the first Kuiper belt object to be discovered.\n"
+        Mode.MOON -> popupView.text1.text = "Moon- The Moon is an astronomical body that orbits planet Earth, being Earth's only permanent natural satellite. It is the fifth-largest natural satellite in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits (its primary). Following Jupiter's satellite Io, the Moon is second-densest satellite among those whose densities are known.\n"
     }
 
 
@@ -247,7 +252,9 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
       R.id.Mercury -> mode = Mode.MERCURY
       R.id.Venus -> mode = Mode.VENUS
       R.id.Earth -> mode = Mode.EARTH
-      R.id.Mars -> mode = Mode.EARTH
+      R.id.Mars -> mode = Mode.MARS
+      R.id.Pluto -> mode = Mode.PLUTO
+      R.id.Moon -> mode = Mode.MOON
     }
   }
 
@@ -295,6 +302,12 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
       venusObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
       earthObject.createOnGlThread(this, "earth.obj", "earth.jpg")
       earthObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+      marsObject.createOnGlThread(this, "mars.obj", "mars.jpg")
+      marsObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+      plutoObject.createOnGlThread(this, "pluto.obj", "pluto.jpg")
+      plutoObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+      moonObject.createOnGlThread(this, "moon.obj", "moon.jpg")
+      moonObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
     } catch (e: IOException) {
       Log.e(TAG, "Failed to read obj file")
     }
@@ -342,6 +355,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
               projectionMatrix, viewMatrix, lightIntensity)
       drawObject(marsObject, marsAttachment, Mode.MARS.scaleFactor,
               projectionMatrix, viewMatrix, lightIntensity)
+      drawObject(plutoObject, plutoAttachment, Mode.PLUTO.scaleFactor,
+              projectionMatrix, viewMatrix, lightIntensity)
       drawObject(moonObject, moonAttachment, Mode.MOON.scaleFactor,
               projectionMatrix, viewMatrix, lightIntensity)
 
@@ -372,6 +387,9 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
             Mode.MERCURY -> mercuryAttachment = addSessionAnchorFromAttachment(mercuryAttachment, hit)
             Mode.VENUS -> venusAttachment = addSessionAnchorFromAttachment(venusAttachment, hit)
             Mode.EARTH -> earthAttachment = addSessionAnchorFromAttachment(earthAttachment, hit)
+            Mode.MARS -> marsAttachment = addSessionAnchorFromAttachment(marsAttachment, hit)
+            Mode.PLUTO -> plutoAttachment = addSessionAnchorFromAttachment(plutoAttachment, hit)
+            Mode.MOON -> moonAttachment = addSessionAnchorFromAttachment(moonAttachment, hit)
           }
 
           break
