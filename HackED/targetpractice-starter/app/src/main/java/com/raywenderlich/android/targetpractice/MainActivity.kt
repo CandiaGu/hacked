@@ -43,10 +43,8 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
+import android.view.*
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.Toast
 import com.google.ar.core.*
@@ -125,6 +123,9 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
       }
 
       override fun onDown(e: MotionEvent): Boolean {
+
+        Toast.makeText(applicationContext, "hi", Toast.LENGTH_SHORT);
+
         return true
       }
     })
@@ -193,9 +194,10 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
   fun onRadioButtonClicked(view: View) {
     val radioButton = view as RadioButton
     when (radioButton.id) {
-      R.id.radioViking -> mode = Mode.VIKING
-      R.id.radioCannon -> mode = Mode.CANNON
-      R.id.radioTarget -> mode = Mode.TARGET
+      R.id.radioButton1 -> mode = Mode.VIKING
+      R.id.radioButton2 -> mode = Mode.CANNON
+      R.id.radioButton3 -> mode = Mode.TARGET
+      R.id.radioButton4 -> mode = Mode.TARGET
     }
   }
 
@@ -237,7 +239,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
     // Prepare the other rendering objects.
     try {
-      vikingObject.createOnGlThread(this, "viking.obj", "viking.png")
+      vikingObject.createOnGlThread(this, "Venus.obj", "venus.png")
       vikingObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
       cannonObject.createOnGlThread(this, "cannon.obj", "cannon.png")
       cannonObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
