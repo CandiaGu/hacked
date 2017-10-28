@@ -84,11 +84,17 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
   //added code
   private val mercuryObject = ObjectRenderer()
   private val venusObject = ObjectRenderer()
-  private val targetObject = ObjectRenderer()
+  private val earthObject = ObjectRenderer()
+  private val marsObject = ObjectRenderer()
+  private val plutoObject = ObjectRenderer()
+  private val moonObject = ObjectRenderer()
 
   private var mercuryAttachment: PlaneAttachment? = null
   private var venusAttachment: PlaneAttachment? = null
-  private var targetAttachment: PlaneAttachment? = null
+  private var earthAttachment: PlaneAttachment? = null
+  private var marsAttachment: PlaneAttachment? = null
+  private var plutoAttachment: PlaneAttachment? = null
+  private var moonAttachment: PlaneAttachment? = null
 
 
 
@@ -170,13 +176,9 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     val popupWindow = PopupWindow(popupView, width, height, focusable)
 
       when (mode) {
-        Mode.MERCURY -> {
-          popupView.text1.text = ""
-          //val textView: TextView = findViewById<po>(R.id.text1) as TextView
-          //textView.setOnClickListener{textView.text = "bruh"}
-        }
-        //Mode.VENUS -> this.findViewById<View>(R.id.text)
-        //Mode.TARGET -> this.findViewById<View>(R.id.text)
+        Mode.MERCURY -> popupView.text1.text = "Mercury"
+        Mode.VENUS -> popupView.text1.text = "Venus"
+        Mode.EARTH -> popupView.text1.text = "Earth"
     }
 
 
@@ -287,12 +289,12 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
     // Prepare the other rendering objects.
     try {
-      mercuryObject.createOnGlThread(this, "Venus.obj", "venus.png")
+      mercuryObject.createOnGlThread(this, "mercury.obj", "mercury.jpg")
       mercuryObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
-      venusObject.createOnGlThread(this, "cannon.obj", "cannon.png")
+      venusObject.createOnGlThread(this, "Venus.obj", "venus.png")
       venusObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
-      targetObject.createOnGlThread(this, "target.obj", "target.png")
-      targetObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+      earthObject.createOnGlThread(this, "earth.obj", "earth.jpg")
+      earthObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
     } catch (e: IOException) {
       Log.e(TAG, "Failed to read obj file")
     }
@@ -336,7 +338,11 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
               projectionMatrix, viewMatrix, lightIntensity)
       drawObject(venusObject, venusAttachment, Mode.VENUS.scaleFactor,
               projectionMatrix, viewMatrix, lightIntensity)
-      drawObject(targetObject, targetAttachment, Mode.EARTH.scaleFactor,
+      drawObject(earthObject, earthAttachment, Mode.EARTH.scaleFactor,
+              projectionMatrix, viewMatrix, lightIntensity)
+      drawObject(marsObject, marsAttachment, Mode.MARS.scaleFactor,
+              projectionMatrix, viewMatrix, lightIntensity)
+      drawObject(moonObject, moonAttachment, Mode.MOON.scaleFactor,
               projectionMatrix, viewMatrix, lightIntensity)
 
 
@@ -365,7 +371,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
           when (mode) {
             Mode.MERCURY -> mercuryAttachment = addSessionAnchorFromAttachment(mercuryAttachment, hit)
             Mode.VENUS -> venusAttachment = addSessionAnchorFromAttachment(venusAttachment, hit)
-            Mode.EARTH -> targetAttachment = addSessionAnchorFromAttachment(targetAttachment, hit)
+            Mode.EARTH -> earthAttachment = addSessionAnchorFromAttachment(earthAttachment, hit)
           }
 
           break

@@ -51,6 +51,16 @@
             android:onClick="onRadioButtonClicked"
             android:text="Mars" />
 
+
+        <RadioButton
+            android:id="@+id/Pluto"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onRadioButtonClicked"
+            android:text="Pluto" />
+
+
         <RadioButton
             android:id="@+id/Moon"
             android:layout_width="150dp"
