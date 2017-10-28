@@ -37,6 +37,7 @@
 
 package com.raywenderlich.android.targetpractice
 
+import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
@@ -44,9 +45,6 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.Toast
 import com.google.ar.core.*
 import com.raywenderlich.android.targetpractice.rendering.*
 import java.io.IOException
@@ -54,6 +52,13 @@ import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
+import org.jetbrains.anko.toast
+import android.view.MotionEvent
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.widget.*
+import kotlinx.android.synthetic.main.popup_window.view.*
+
 
 
 class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
@@ -62,7 +67,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     const val TAG = "MainActivity"
   }
 
-  private var mode: Mode = Mode.VIKING
+  private var mode: Mode = Mode.MERCURY
 
   lateinit private var surfaceView: GLSurfaceView
 
@@ -77,12 +82,12 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
   private val pointCloud = PointCloudRenderer()
 
   //added code
-  private val vikingObject = ObjectRenderer()
-  private val cannonObject = ObjectRenderer()
+  private val mercuryObject = ObjectRenderer()
+  private val venusObject = ObjectRenderer()
   private val targetObject = ObjectRenderer()
 
-  private var vikingAttachment: PlaneAttachment? = null
-  private var cannonAttachment: PlaneAttachment? = null
+  private var mercuryAttachment: PlaneAttachment? = null
+  private var venusAttachment: PlaneAttachment? = null
   private var targetAttachment: PlaneAttachment? = null
 
 
@@ -114,19 +119,24 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
     return true
   }
-
+  /*fun Context.toast(message: CharSequence) =
+          Toast.makeText(this,message, Toast.LENGTH_SHORT).show()
+  */
   private fun setupTapDetector() {
     gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
       override fun onSingleTapUp(e: MotionEvent): Boolean {
+        toast("hi");
         onSingleTap(e)
         return true
       }
 
       override fun onDown(e: MotionEvent): Boolean {
-
-        Toast.makeText(applicationContext, "hi", Toast.LENGTH_SHORT);
-
         return true
+      }
+
+      override fun onLongPress(e: MotionEvent) {
+        onButtonShowPopupWindowClick(surfaceView);
+        toast("second");
       }
     })
   }
@@ -142,6 +152,44 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0) // Alpha used for plane blending.
     surfaceView.setRenderer(this)
     surfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+  }
+
+  fun onButtonShowPopupWindowClick(view: View) {
+
+    // get a reference to the already created main layout
+    val mainLayout = findViewById<View>(R.id.activity_main_layout) as LinearLayout
+
+    // inflate the layout of the popup window
+    val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val popupView = inflater.inflate(R.layout.popup_window, null)
+
+    // create the popup window
+    val width = LinearLayout.LayoutParams.WRAP_CONTENT
+    val height = LinearLayout.LayoutParams.WRAP_CONTENT
+    val focusable = true // lets taps outside the popup also dismiss it
+    val popupWindow = PopupWindow(popupView, width, height, focusable)
+
+      when (mode) {
+        Mode.MERCURY -> {
+          popupView.text1.text = ""
+          //val textView: TextView = findViewById<po>(R.id.text1) as TextView
+          //textView.setOnClickListener{textView.text = "bruh"}
+        }
+        //Mode.VENUS -> this.findViewById<View>(R.id.text)
+        //Mode.TARGET -> this.findViewById<View>(R.id.text)
+    }
+
+
+    // show the popup window
+    popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0)
+
+    // dismiss the popup window when touched
+    /*popupView.setOnTouchListener(object : View.OnTouchListener() {
+      fun onTouch(v: View, event: MotionEvent): Boolean {
+        popupWindow.dismiss()
+        return true
+      }
+    })*/
   }
 
 
@@ -194,10 +242,10 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
   fun onRadioButtonClicked(view: View) {
     val radioButton = view as RadioButton
     when (radioButton.id) {
-      R.id.radioButton1 -> mode = Mode.VIKING
-      R.id.radioButton2 -> mode = Mode.CANNON
-      R.id.radioButton3 -> mode = Mode.TARGET
-      R.id.radioButton4 -> mode = Mode.TARGET
+      R.id.Mercury -> mode = Mode.MERCURY
+      R.id.Venus -> mode = Mode.VENUS
+      R.id.Earth -> mode = Mode.EARTH
+      R.id.Mars -> mode = Mode.EARTH
     }
   }
 
@@ -239,10 +287,10 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
     // Prepare the other rendering objects.
     try {
-      vikingObject.createOnGlThread(this, "Venus.obj", "venus.png")
-      vikingObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
-      cannonObject.createOnGlThread(this, "cannon.obj", "cannon.png")
-      cannonObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+      mercuryObject.createOnGlThread(this, "Venus.obj", "venus.png")
+      mercuryObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+      venusObject.createOnGlThread(this, "cannon.obj", "cannon.png")
+      venusObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
       targetObject.createOnGlThread(this, "target.obj", "target.png")
       targetObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
     } catch (e: IOException) {
@@ -284,11 +332,11 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
       checkPlaneDetected()
       visualizePlanes(frame, projectionMatrix)
 
-      drawObject(vikingObject, vikingAttachment, Mode.VIKING.scaleFactor,
+      drawObject(mercuryObject, mercuryAttachment, Mode.MERCURY.scaleFactor,
               projectionMatrix, viewMatrix, lightIntensity)
-      drawObject(cannonObject, cannonAttachment, Mode.CANNON.scaleFactor,
+      drawObject(venusObject, venusAttachment, Mode.VENUS.scaleFactor,
               projectionMatrix, viewMatrix, lightIntensity)
-      drawObject(targetObject, targetAttachment, Mode.TARGET.scaleFactor,
+      drawObject(targetObject, targetAttachment, Mode.EARTH.scaleFactor,
               projectionMatrix, viewMatrix, lightIntensity)
 
 
@@ -315,9 +363,9 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         if (hit is PlaneHitResult && hit.isHitInPolygon) {
           // Hits are sorted by depth. Consider only closest hit on a plane.
           when (mode) {
-            Mode.VIKING -> vikingAttachment = addSessionAnchorFromAttachment(vikingAttachment, hit)
-            Mode.CANNON -> cannonAttachment = addSessionAnchorFromAttachment(cannonAttachment, hit)
-            Mode.TARGET -> targetAttachment = addSessionAnchorFromAttachment(targetAttachment, hit)
+            Mode.MERCURY -> mercuryAttachment = addSessionAnchorFromAttachment(mercuryAttachment, hit)
+            Mode.VENUS -> venusAttachment = addSessionAnchorFromAttachment(venusAttachment, hit)
+            Mode.EARTH -> targetAttachment = addSessionAnchorFromAttachment(targetAttachment, hit)
           }
 
           break
